@@ -13,22 +13,22 @@ def create_default_plans(apps, schema_editor):
     PRICING = {
         "basic": {
             "monthly": 10,
-            "quaterly": 27, # 10%
-            "half_yearly": 51, # 15%
-            "yearly": 96, # 20%
+            "quaterly": 27,  # 10%
+            "half_yearly": 51,  # 15%
+            "yearly": 96,  # 20%
         },
         "pro": {
             "monthly": 20,
-            "quaterly": 54, # 10%
-            "half_yearly": 102, # 15%
-            "yearly": 192, # 20%
+            "quaterly": 54,  # 10%
+            "half_yearly": 102,  # 15%
+            "yearly": 192,  # 20%
         },
         "enterprise": {
             "monthly": 40,
-            "quaterly": 108, # 10%
-            "half_yearly": 204, # 15%
-            "yearly": 384, # 20%
-        }
+            "quaterly": 108,  # 10%
+            "half_yearly": 204,  # 15%
+            "yearly": 384,  # 20%
+        },
     }
 
     default_plans = []
@@ -53,6 +53,4 @@ class Migration(migrations.Migration):
         ("subscriptions", "0001_initial"),
     ]
 
-    operations = [
-        migrations.RunPython(create_default_plans)
-    ]
+    operations = [migrations.RunPython(create_default_plans, migrations.RunPython.noop)]

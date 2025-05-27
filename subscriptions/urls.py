@@ -3,4 +3,7 @@ from subscriptions import views
 
 urlpatterns = [
     path("plans/", views.PlanView.as_view(), name="list_plans"),
+    path(
+        "subscriptions/", views.SubscriptionView.as_view(), name="create_subscription"
+    ),
 ]
