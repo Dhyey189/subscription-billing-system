@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "django_celery_beat",
     "users",
     "subscriptions",
 ]
@@ -133,3 +134,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+# CELERY CONFIGURATION
+CELERY_BROKER_URL        = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND    = "redis://redis:6379/1"
+CELERY_ACCEPT_CONTENT    = ["json"]
+CELERY_TASK_SERIALIZER   = "json"
+CELERY_RESULT_SERIALIZER = "json"

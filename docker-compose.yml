@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  # Redis service for broker and back-end
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+  # Django server with built in SQLite3 database
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django-web
+    command: gunicorn subscription_system.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+  # Celery worker service for async tasks
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery-worker
+    command: celery -A subscription_system worker --loglevel=info
+    volumes:
+      - ./:/code
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - web
+  # Celery beat service for scheduling tasks
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery-beat
+    command: celery -A subscription_system beat --loglevel=info
+    volumes:
+      - ./:/code
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - web
