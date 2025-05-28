@@ -12,15 +12,24 @@ class PlanView(generics.ListAPIView):
     queryset = Plan.objects.filter(is_active=True)
 
 
-class SubscriptionView(generics.ListCreateAPIView):
+class SubscriptionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SubscriptionSerializer
-    queryset = Subscription.objects.filter(
-        status=SubscriptionStatusChoices.ACTIVE.value
-    )
 
     def get_serializer(self, *args, **kwargs):
         if "data" in kwargs:
             kwargs["data"]["user"] = self.request.user.id
 
         return super().get_serializer(*args, **kwargs)
+
+    def get_queryset(self):
+        return Subscription.objects.filter(user_id=self.request.user.id)
+
+
+class SubscriptionRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SubscriptionSerializer
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return Subscription.objects.filter(user_id=self.request.user.id)

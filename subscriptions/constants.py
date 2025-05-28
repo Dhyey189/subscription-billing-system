@@ -26,7 +26,7 @@ class SubscriptionStatusChoices(TextChoices):
     ACTIVE = "active", "Active"  # subscription taken and started
 
     INACTIVE = "inactive", "Inactive"  # subscription taken but not started
-    CANCELLED = "cancelled", "Cancelled"  # subscription cancelled by user
+    CANCELLED = "cancelled", "Cancelled"  # subscription cancelled/unsubscribed by user
     EXPIRED = "expired", "Expired"  # subscription expired
     SUSPENDED = "suspended", "Suspended"  # it can be due payment term violations.
     PAUSE = "pause", "Pause"  # subscription paused by user
@@ -39,3 +39,4 @@ class InvoiceStatusChoices(TextChoices):
 
 
 DEFAULT_PAYMENT_DUE_TERM = 7  # Days
+INVOICE_DUE_REMINDER_INTERVAL = 3  # Days

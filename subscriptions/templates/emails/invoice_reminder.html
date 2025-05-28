@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Reminder: Invoice Generated</title>
+  </head>
+  <body>
+    <p>Hello {{ invoice.user.name }},</p>
+
+    <p>
+      This is a friendly reminder that payment for your invoice #{{ invoice.id }} for the {{ invoice.subscription.plan.get_name_display }} plan is pending.
+    </p>
+
+    <ul>
+      <li>Amount: ${{ invoice.amount }}</li>
+      <li>Issue Date: {{ invoice.issue_date }}</li>
+      <li>Due Date: {{ invoice.due_date }}</li>
+    </ul>
+
+    <p>
+      Please view and pay your invoice before or on the due date to keep your subscription active.
+    </p>
+
+    <p>Thanks</p>
+  </body>
+</html>

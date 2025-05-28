@@ -15,6 +15,10 @@ from users.models import TimeStampedModel
 
 
 class Plan(TimeStampedModel):
+    """
+    Stores subscription plans for which user can subscribe to. Each plan has plan_term i.e
+    duration of billing cycle and price associated with it. 
+    """
     name = models.CharField(
         max_length=15, choices=PlanChoices.choices, default=PlanChoices.BASIC.value
     )
@@ -34,7 +38,11 @@ class Plan(TimeStampedModel):
 
 
 class Subscription(TimeStampedModel):
-    user = models.OneToOneField(
+    """
+    Stores user's subscription for specific plan and its start date.
+    At a time user can have only one active subscription.
+    """
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="subscriptions"
     )
     plan = models.ForeignKey(
@@ -67,6 +75,11 @@ class Subscription(TimeStampedModel):
 
 
 class Invoice(TimeStampedModel):
+    """
+    Stores invoice details for specfic user's subscription.
+    Invoices will generated using periodic tasks on first day of each billing cycle.
+    It will store issue date and due date of invoice. 
+    """
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="invoices"
     )

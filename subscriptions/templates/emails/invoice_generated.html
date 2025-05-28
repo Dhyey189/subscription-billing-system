@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Invoice Generated</title>
+  </head>
+  <body>
+    <p>Hello {{ invoice.user.name }},</p>
+
+    <p>
+      Your invoice #{{ invoice.id }} for the {{ invoice.subscription.plan.get_name_display }} plan is now available.
+    </p>
+
+    <ul>
+      <li>Amount: ${{ invoice.amount }}</li>
+      <li>Issue Date: {{ invoice.issue_date }}</li>
+      <li>Due Date: {{ invoice.due_date }}</li>
+    </ul>
+
+    <p>
+      Please view and pay your invoice.
+    </p>
+
+    <p>Thanks</p>
+  </body>
+</html>
