@@ -12,13 +12,15 @@ from django.utils.functional import cached_property
 from datetime import timedelta
 
 from users.models import TimeStampedModel
+from django.db.models import Q, UniqueConstraint
 
 
 class Plan(TimeStampedModel):
     """
     Stores subscription plans for which user can subscribe to. Each plan has plan_term i.e
-    duration of billing cycle and price associated with it. 
+    duration of billing cycle and price associated with it.
     """
+
     name = models.CharField(
         max_length=15, choices=PlanChoices.choices, default=PlanChoices.BASIC.value
     )
@@ -42,6 +44,7 @@ class Subscription(TimeStampedModel):
     Stores user's subscription for specific plan and its start date.
     At a time user can have only one active subscription.
     """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="subscriptions"
     )
@@ -54,6 +57,15 @@ class Subscription(TimeStampedModel):
         choices=SubscriptionStatusChoices.choices,
         default=SubscriptionStatusChoices.ACTIVE.value,
     )
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=["user"],
+                condition=Q(status=SubscriptionStatusChoices.ACTIVE.value),
+                name="unique_active_subscription_per_user",
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.email} - {self.plan.name}"
@@ -78,8 +90,9 @@ class Invoice(TimeStampedModel):
     """
     Stores invoice details for specfic user's subscription.
     Invoices will generated using periodic tasks on first day of each billing cycle.
-    It will store issue date and due date of invoice. 
+    It will store issue date and due date of invoice.
     """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="invoices"
     )

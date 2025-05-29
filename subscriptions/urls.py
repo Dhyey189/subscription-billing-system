@@ -1,12 +1,12 @@
 from django.urls import path
 from subscriptions import views
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+router.register(r"subscriptions", views.SubscriptionViewSet)
+router.register(r"invoices", views.InvoiceViewSet)
 
 urlpatterns = [
     path("plans/", views.PlanView.as_view(), name="list_plans"),
-    path(
-        "subscriptions/", views.SubscriptionListCreateView.as_view(), name="list_create_subscription"
-    ),
-    path(
-        "subscriptions/<int:id>/", views.SubscriptionRetrieveUpdateView.as_view(), name="get_update_subscription"
-    ),
 ]
+urlpatterns += router.urls

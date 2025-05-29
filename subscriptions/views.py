@@ -2,9 +2,15 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from subscriptions.constants import SubscriptionStatusChoices
-from subscriptions.serializers import PlanSerializer, SubscriptionSerializer
-from subscriptions.models import Plan, Subscription
+from subscriptions.serializers import (
+    InvoiceSerializer,
+    PlanSerializer,
+    SubscriptionSerializer,
+)
+from subscriptions.models import Invoice, Plan, Subscription
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import viewsets, mixins
+from subscriptions.permissions import IsUserSubscriptionOrInvoice
 
 
 class PlanView(generics.ListAPIView):
@@ -12,24 +18,21 @@ class PlanView(generics.ListAPIView):
     queryset = Plan.objects.filter(is_active=True)
 
 
-class SubscriptionListCreateView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsUserSubscriptionOrInvoice]
     serializer_class = SubscriptionSerializer
-
-    def get_serializer(self, *args, **kwargs):
-        if "data" in kwargs:
-            kwargs["data"]["user"] = self.request.user.id
-
-        return super().get_serializer(*args, **kwargs)
+    queryset = Subscription.objects.all()
 
     def get_queryset(self):
         return Subscription.objects.filter(user_id=self.request.user.id)
 
 
-class SubscriptionRetrieveUpdateView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = SubscriptionSerializer
-    lookup_field = "id"
+class InvoiceViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
+    permission_classes = [IsAuthenticated, IsUserSubscriptionOrInvoice]
+    serializer_class = InvoiceSerializer
+    queryset = Invoice.objects.all()
 
     def get_queryset(self):
-        return Subscription.objects.filter(user_id=self.request.user.id)
+        return Invoice.objects.filter(user_id=self.request.user.id)
