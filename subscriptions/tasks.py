@@ -1,3 +1,4 @@
+import stripe
 from datetime import timedelta
 from django.utils import timezone
 from celery import shared_task
@@ -11,6 +12,7 @@ from subscriptions.constants import (
 )
 from subscriptions.helpers import send_template_email
 from subscriptions.models import Subscription, Invoice, PLAN_TERM_TO_DAYS_MAPPING
+from subscriptions.stripe import get_or_create_stripe_customer
 
 celery_logger = get_task_logger(__name__)
 
@@ -59,6 +61,19 @@ def task_generate_invoices():
         celery_logger.info(f"Total number of invoices created: {len(invoices_created)}")
 
         for invoice in invoices_created:
+            # Generate stripe payment intent for invoices
+            stripe_customer = get_or_create_stripe_customer(invoice.user)
+            payment_intent = stripe.PaymentIntent.create(
+                amount=int(invoice.amount * 100),
+                currency="usd",
+                customer=stripe_customer.id,
+                metadata={"invoice_id": invoice.id},
+                automatic_payment_methods={"enabled": True},
+            )
+            invoice.stripe_payment_intent = payment_intent.id
+            invoice.save()
+
+            # Send invoice generation email to user
             subject = f"Your invoice #{invoice.id} is available"
             send_template_email(
                 subject=subject,

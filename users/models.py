@@ -20,6 +20,7 @@ class User(AbstractUser, TimeStampedModel):
     username = None
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    stripe_customer_id = models.CharField(max_length=100, blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

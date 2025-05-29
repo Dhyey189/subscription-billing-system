@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "5753bda7-53d4-418b-a6ce-889d60154993",
+		"name": "Subscription Billing System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24808702"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "User Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dhyey Patel\",\n    \"email\": \"dhyeypateltest+abc1@gmail.com\",\n    \"password\": \"Dhyey@1809\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_SERVER_URL}}api/users/singup/",
+							"host": [
+								"{{BASE_SERVER_URL}}api"
+							],
+							"path": [
+								"users",
+								"singup",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"dhyeypateltest+3@gmail.com\",\n    \"password\": \"Dhyey@1809\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_SERVER_URL}}api/users/login/",
+							"host": [
+								"{{BASE_SERVER_URL}}api"
+							],
+							"path": [
+								"users",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Billing",
+			"item": [
+				{
+					"name": "Plan",
+					"item": [
+						{
+							"name": "List Plan",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"dhyeypateltest+3@gmail.com\",\n    \"password\": \"Dhyey@1809\"\n}"
+								},
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/plans/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"plans",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Subscription",
+					"item": [
+						{
+							"name": "Create Subscription",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"plan\": 19\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/subscriptions/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"subscriptions",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unsubscribe / Update Subscription",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"cancelled\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/subscriptions/9/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"subscriptions",
+										"9",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Subscriptions",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/subscriptions/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"subscriptions",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Subscription",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/subscriptions/7/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"subscriptions",
+										"7",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Invoice",
+					"item": [
+						{
+							"name": "List Invoices",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/invoices/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"invoices",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Invoice with Payment Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/invoices/2/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"invoices",
+										"2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Initiate Invoice Payment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{LOGIN_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_SERVER_URL}}api/billing/invoices/5/payment/",
+									"host": [
+										"{{BASE_SERVER_URL}}api"
+									],
+									"path": [
+										"billing",
+										"invoices",
+										"5",
+										"payment",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

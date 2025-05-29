@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+import stripe
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -193,3 +194,8 @@ LOGGING = {
 # Only for local: print emails in console
 DEFAULT_FROM_EMAIL = "no-reply-info@subscription.system.com"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# STRIPE CONFIGURATION
+STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY")
+STRIPE_WEBHOOK_KEY = os.environ.get("STRIPE_WEBHOOK_KEY")
+stripe.api_key = STRIPE_API_KEY
