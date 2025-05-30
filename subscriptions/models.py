@@ -1,16 +1,12 @@
 from django.db import models
 
 from subscriptions.constants import (
-    PLAN_TERM_TO_DAYS_MAPPING,
     InvoiceStatusChoices,
     PlanChoices,
     PlanTermChoices,
     SubscriptionStatusChoices,
 )
 from django.conf import settings
-from django.utils.functional import cached_property
-from datetime import timedelta
-
 from users.models import TimeStampedModel
 from django.db.models import Q, UniqueConstraint
 
@@ -69,21 +65,6 @@ class Subscription(TimeStampedModel):
 
     def __str__(self):
         return f"{self.user.email} - {self.plan.name}"
-
-    @cached_property
-    def next_billing_cycle(self):
-        last_invoice = self.invoices.order_by("-issue_date").first()
-        if last_invoice:
-            new_start_date = last_invoice.issue_date + timedelta(
-                days=PLAN_TERM_TO_DAYS_MAPPING[self.plan.plan_term]
-            )
-        else:
-            new_start_date = self.start_date
-        new_end_data = new_start_date + timedelta(
-            days=PLAN_TERM_TO_DAYS_MAPPING[self.plan.plan_term] - 1
-        )
-
-        return new_start_date, new_end_data
 
 
 class Invoice(TimeStampedModel):

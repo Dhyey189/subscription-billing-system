@@ -2,14 +2,12 @@ import stripe
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
-from subscriptions.constants import SubscriptionStatusChoices
 from subscriptions.serializers import (
     InvoiceSerializer,
     PlanSerializer,
     SubscriptionSerializer,
 )
 from subscriptions.models import Invoice, Plan, Subscription
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import viewsets, mixins
 from subscriptions.permissions import IsUserSubscriptionOrInvoice
 from django.conf import settings
@@ -96,16 +94,13 @@ class StripeWebhookView(generics.CreateAPIView):
                 payload, sig_header, settings.STRIPE_WEBHOOK_KEY
             )
         except ValueError as e:
-            print(str(e))
             return Response(status=status.HTTP_400_BAD_REQUEST)
         except stripe.error.SignatureVerificationError as e:
-            print(str(e))
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if event["type"] == "payment_intent.succeeded":
             intent = event["data"]["object"]
             invoice_id = intent["metadata"].get("invoice_id")
-            print(invoice_id)
             Invoice.objects.filter(id=invoice_id).update(status="paid")
         elif event["type"] == "payment_intent.payment_failed":
             intent = event["data"]["object"]

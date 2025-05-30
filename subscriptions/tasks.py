@@ -5,13 +5,14 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.db.models import Max
 from subscriptions.constants import (
+    PLAN_TERM_TO_DAYS_MAPPING,
     DEFAULT_PAYMENT_DUE_TERM,
     INVOICE_DUE_REMINDER_INTERVAL,
     InvoiceStatusChoices,
     SubscriptionStatusChoices,
 )
 from subscriptions.helpers import send_template_email
-from subscriptions.models import Subscription, Invoice, PLAN_TERM_TO_DAYS_MAPPING
+from subscriptions.models import Subscription, Invoice
 from subscriptions.stripe import get_or_create_stripe_customer
 
 celery_logger = get_task_logger(__name__)
